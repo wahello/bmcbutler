@@ -254,12 +254,7 @@ func (s *SupermicroX) HardwareType() (model string) {
 		// Here is your sin
 		return model
 	}
-
-	if strings.Contains(strings.ToLower(m), X11) {
-		return X11
-	}
-
-	return BmcType
+	return m
 }
 
 // Model returns the device model
@@ -728,4 +723,19 @@ func (s *SupermicroX) Disks() (disks []*devices.Disk, err error) {
 func (s *SupermicroX) UpdateCredentials(username string, password string) {
 	s.username = username
 	s.password = password
+}
+
+// BiosVersion returns the BIOS version from the BMC, implements the Firmware interface
+func (s *SupermicroX) GetBIOSVersion(ctx context.Context) (string, error) {
+	return "", errors.ErrNotImplemented
+}
+
+// BMCVersion returns the BMC version, implements the Firmware interface
+func (s *SupermicroX) GetBMCVersion(ctx context.Context) (string, error) {
+	return "", errors.ErrNotImplemented
+}
+
+// Updates the BMC firmware, implements the Firmware interface
+func (s *SupermicroX) FirmwareUpdateBMC(ctx context.Context, filePath string) error {
+	return errors.ErrNotImplemented
 }
