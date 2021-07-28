@@ -30,18 +30,22 @@ ldap:
   groupAttribute: memberUid
   searchFilter: objectClass=posixAccount
 
-ldapGroup:
-  - role: admin
-    group: cn=<%= vendor %>,cn=bmcAdmins
-    groupBaseDn: ou=Group,dc=example,dc=com #the baseDn to lookup group in.
-    enable: true
-  - role: user
-    group: cn=<%= vendor%>,cn=bmcUsers #the group in ldap
-    groupBaseDn: ou=Group,dc=example,dc=com #the baseDn to lookup group in.
-    enable: false
-  - role: user
-    group: RemoveGroup
-    enable: false
+ldapGroups:
+  - bin:
+    path: /path/to/your/script.sh
+    executor: /bin/bash/for/example
+  - groups:
+    - role: admin
+      group: cn=<%= vendor %>,cn=bmcAdmins
+      groupBaseDn: ou=Group,dc=example,dc=com #the baseDn to lookup group in.
+      enable: true
+    - role: user
+      group: cn=<%= vendor%>,cn=bmcUsers
+      groupBaseDn: ou=Group,dc=example,dc=com #the baseDn to lookup group in.
+      enable: false
+    - role: user
+      group: RemoveGroup
+      enable: false
 # Declares configuration for HTTPS certs
 # If any of the params below differ in the current cert,
 # a CSR is generated on the BMC and passed to the signer (see bmcbutler.yml)

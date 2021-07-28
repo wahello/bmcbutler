@@ -113,8 +113,8 @@ func (b *Cmc) Apply() { //nolint: gocyclo
 				err = b.configure.Ldap(b.config.Ldap)
 			}
 		case "ldap_group":
-			if b.config.LdapGroup != nil && b.config.Ldap != nil {
-				err = b.configure.LdapGroup(b.config.LdapGroup, b.config.Ldap)
+			if b.config.LdapGroups != nil && b.config.Ldap != nil {
+				err = b.configure.LdapGroups(b.config.LdapGroups.Groups, b.config.Ldap)
 			}
 		case "license":
 			if b.config.License != nil {

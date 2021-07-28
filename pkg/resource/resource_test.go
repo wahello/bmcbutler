@@ -84,7 +84,7 @@ func TestLoadConfigResources(t *testing.T) {
 		t.Fatal("Expected return type does not match *cfgresources.ResourcesConfig")
 	}
 
-	if configResources.LdapGroup[0].Group != "cn=acme,cn=bmcAdmins" {
+	if configResources.LdapGroups.Groups[0].Group != "cn=acme,cn=bmcAdmins" {
 		t.Fatal("Expected string not found in LdapGroup config resource")
 	}
 

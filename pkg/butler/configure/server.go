@@ -123,8 +123,20 @@ func (b *Bmc) Apply() {
 				err = b.configure.Ldap(b.config.Ldap)
 			}
 		case "ldap_group":
-			if b.config.LdapGroup != nil && b.config.Ldap != nil {
-				err = b.configure.LdapGroup(b.config.LdapGroup, b.config.Ldap)
+			if b.config.LdapGroups != nil && b.config.Ldap != nil {
+				k, err := b.config.LdapGroups.GetExtraGroups(b.asset.Serial, b.asset.Vendor)
+				if err != nil {
+					b.logger.WithFields(logrus.Fields{
+						"Vendor":    b.vendor,
+						"Model":     b.model,
+						"Serial":    b.serial,
+						"IPAddress": b.ip,
+						"Error":     err,
+						"K":         k,
+						"Groups":    b.config.LdapGroups.Groups,
+					}).Warn("Trying to fetch more LDAP groups has failed.")
+				}
+				err = b.configure.LdapGroups(b.config.LdapGroups.Groups, b.config.Ldap)
 			}
 		case "license":
 			if b.config.License != nil {
