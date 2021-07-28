@@ -57,7 +57,7 @@ ldapGroup:
     groupBaseDn: ou=Group,dc=example,dc=com #the baseDn to lookup group in.
     enable: true
   - role: user
-    group: cn=<%= vendor%>,cn=bmcUsers #the group in ldap
+    group: cn=<%= vendor%>,cn=bmcUsers
     groupBaseDn: ou=Group,dc=example,dc=com #the baseDn to lookup group in.
 ```
 

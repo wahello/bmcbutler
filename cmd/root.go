@@ -83,7 +83,6 @@ func setupLogger() {
 }
 
 func init() {
-
 	//bmcbutler runtime configuration.
 	//NOTE: to override any config from the flags declared here, see overrideConfigFromFlags in common.go
 	runConfig = &config.Params{}

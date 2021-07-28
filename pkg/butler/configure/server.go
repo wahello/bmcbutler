@@ -95,7 +95,7 @@ func (b *Bmc) Apply() {
 		var reset bool
 
 		// check if an interrupt was received.
-		if interrupt == true {
+		if interrupt {
 			b.logger.WithFields(logrus.Fields{
 				"Vendor":    b.vendor,
 				"Model":     b.model,
