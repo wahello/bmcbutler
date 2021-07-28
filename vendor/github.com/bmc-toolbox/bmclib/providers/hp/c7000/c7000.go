@@ -79,6 +79,10 @@ func (c *C7000) CheckCredentials() (err error) {
 	return err
 }
 
+func (c *C7000) Class() (class string, err error) {
+	return "C7000", nil
+}
+
 // Name returns the hostname of the machine
 func (c *C7000) Name() (name string, err error) {
 	return c.Rimp.Infra2.Encl, err

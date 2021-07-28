@@ -2,6 +2,7 @@ package ibmc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/bmc-toolbox/bmclib/cfgresources"
 	"github.com/bmc-toolbox/bmclib/devices"
@@ -37,6 +38,10 @@ func (i *Ibmc) ApplyCfg(config *cfgresources.ResourcesConfig) (err error) {
 // BiosVersion implements the Bmc interface
 func (i *Ibmc) BiosVersion() (string, error) {
 	return "", nil
+}
+
+func (i *Ibmc) Class() (class string, err error) {
+	return "iBMC", nil
 }
 
 // HardwareType implements the Bmc interface
@@ -179,8 +184,8 @@ func (i *Ibmc) Slot() (int, error) {
 }
 
 // UpdateFirmware implements the Bmc inteface
-func (i *Ibmc) UpdateFirmware(string, string) (b bool, e error) {
-	return b, e
+func (i *Ibmc) UpdateFirmware(string, string) (bool, string, error) {
+	return false, "Not yet implemented", fmt.Errorf("not yet implemented")
 }
 
 // IsOn implements the Bmc interface

@@ -403,6 +403,10 @@ func (i *IDrac9) BiosVersion() (version string, err error) {
 	return version, err
 }
 
+func (i *IDrac9) Class() (class string, err error) {
+	return "iDRAC9", nil
+}
+
 // Name returns the name of this server from the bmc point of view
 func (i *IDrac9) Name() (name string, err error) {
 	err = i.loadHwData()

@@ -47,8 +47,8 @@ func (b *Butler) executeCommand(command string, asset *asset.Asset) (err error) 
 	switch client.(type) {
 	case devices.Bmc:
 		bmc := client.(devices.Bmc)
-		success, err := b.executeCommandBmc(bmc, command)
-		if err != nil || success != true {
+		success, output, err := b.executeCommandBmc(bmc, command)
+		if err != nil || !success {
 			log.WithFields(logrus.Fields{
 				"component":          component,
 				"Serial":             asset.Serial,
@@ -58,6 +58,7 @@ func (b *Butler) executeCommand(command string, asset *asset.Asset) (err error) 
 				"Command":            command,
 				"Command successful": success,
 				"Error":              err,
+				"Output":             output,
 			}).Warn("Command execute returned error.")
 		} else {
 			log.WithFields(logrus.Fields{
@@ -68,8 +69,8 @@ func (b *Butler) executeCommand(command string, asset *asset.Asset) (err error) 
 				"Location":           asset.Location,
 				"Command":            command,
 				"Command successful": success,
-			}).Debug("Command executed.")
-
+				"Output":             output,
+			}).Debug("Command successfully executed.")
 		}
 		bmc.Close(context.TODO())
 	case devices.Cmc:
@@ -91,17 +92,27 @@ func (b *Butler) executeCommand(command string, asset *asset.Asset) (err error) 
 	return err
 }
 
-func (b *Butler) executeCommandBmc(bmc devices.Bmc, command string) (success bool, err error) {
-
+func (b *Butler) executeCommandBmc(bmc devices.Bmc, command string) (success bool, output string, err error) {
 	switch command {
 	case "bmc-reset":
 		success, err := bmc.PowerCycleBmc()
-		return success, err
+		return success, "", err
 	case "powercycle":
 		success, err := bmc.PowerCycle()
-		return success, err
+		return success, "", err
+	case "firmware-update":
+		class, err := bmc.Class()
+		if err != nil {
+			return false, "", err
+		}
+
+		success, output, err := bmc.UpdateFirmware("10.198.174.2", "bmc-firmware/"+bmc.Vendor()+"/"+class)
+		return success, output, err
+	case "firmware-version":
+		output, err := bmc.CheckFirmwareVersion()
+		return err == nil, output, err
 	default:
-		return success, fmt.Errorf("Unknown command: %s", command)
+		return success, "", fmt.Errorf("unknown command: %s", command)
 	}
 }
 

@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"regexp"
 	"strings"
 
 	"github.com/bmc-toolbox/bmclib/devices"
@@ -381,6 +382,21 @@ func (i *Ilo) BiosVersion() (version string, err error) {
 	}
 
 	return version, errors.ErrBiosNotFound
+}
+
+func (i *Ilo) Class() (class string, err error) {
+	output, err := i.sshClient.Run("show /map1/ name")
+	if err != nil {
+		return "", fmt.Errorf("output: %q: %w", output, err)
+	}
+
+	re := regexp.MustCompile(`.*name=(.*)`)
+	matches := re.FindStringSubmatch(output)
+	if len(matches) > 1 {
+		return strings.Join(strings.Fields(matches[1]), ""), nil
+	}
+
+	return "", fmt.Errorf("unexpected output: %q", output)
 }
 
 // PowerKw returns the current power usage in Kw

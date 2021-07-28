@@ -399,6 +399,10 @@ func (s *SupermicroX) BiosVersion() (version string, err error) {
 	return version, err
 }
 
+func (s *SupermicroX) Class() (class string, err error) {
+	return "SupermicroX", nil
+}
+
 // PowerKw returns the current power usage in Kw
 func (s *SupermicroX) PowerKw() (power float64, err error) {
 	ipmi, err := s.query("Get_NodeInfoReadings.XML=(0,0)")

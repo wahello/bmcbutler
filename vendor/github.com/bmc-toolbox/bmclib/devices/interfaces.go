@@ -23,7 +23,8 @@ type Bmc interface {
 	PowerCycleBmc() (bool, error) // BMCResetter
 	PowerCycle() (bool, error)    // PowerSetter
 	UpdateCredentials(string, string)
-	UpdateFirmware(string, string) (bool, error)
+	UpdateFirmware(string, string) (bool, string, error)
+	CheckFirmwareVersion() (string, error)
 }
 
 // BmcCollection represents the requirement of items to be collected a server
@@ -31,6 +32,7 @@ type BmcCollection interface {
 	BiosVersion() (string, error)
 	HardwareType() string
 	Version() (string, error)
+	Class() (string, error) // Class is like ILO4 or ILO5, iDRAC8 or iDRAC9, etc
 	CPU() (string, int, int, int, error)
 	Disks() ([]*Disk, error)
 	IsBlade() (bool, error)
@@ -77,7 +79,8 @@ type Cmc interface {
 	PxeOnceBlade(int) (bool, error)
 	ReseatBlade(int) (bool, error)
 	UpdateCredentials(string, string)
-	UpdateFirmware(string, string) (bool, error)
+	UpdateFirmware(string, string) (bool, string, error)
+	CheckFirmwareVersion() (string, error)
 }
 
 // CmcCollection represents the requirement of items to be collected from a chassis
