@@ -52,11 +52,12 @@ func (b *Butler) executeCommand(command string, asset *asset.Asset) (err error) 
 			log.WithFields(logrus.Fields{
 				"component":          component,
 				"Serial":             asset.Serial,
-				"AssetType":          asset.Type,
+				"Asset Type":         asset.Type,
 				"Vendor":             asset.Vendor, //at this point the vendor may or may not be known.
 				"Location":           asset.Location,
+				"IP Address":         asset.IPAddress,
 				"Command":            command,
-				"Command successful": success,
+				"Command Successful": success,
 				"Error":              err,
 				"Output":             output,
 			}).Warn("Command execute returned error.")
@@ -64,11 +65,12 @@ func (b *Butler) executeCommand(command string, asset *asset.Asset) (err error) 
 			log.WithFields(logrus.Fields{
 				"component":          component,
 				"Serial":             asset.Serial,
-				"AssetType":          asset.Type,
+				"Asset Type":         asset.Type,
 				"Vendor":             asset.Vendor,
 				"Location":           asset.Location,
+				"IP Address":         asset.IPAddress,
 				"Command":            command,
-				"Command successful": success,
+				"Command Successful": success,
 				"Output":             output,
 			}).Debug("Command successfully executed.")
 		}
