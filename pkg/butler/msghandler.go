@@ -62,12 +62,16 @@ func (b *Butler) msgHandler(msg Msg) {
 		err := b.executeCommand(msg.AssetExecute, &msg.Asset)
 		if err != nil {
 			b.Log.WithFields(logrus.Fields{
-				"component": component,
-				"Serial":    msg.Asset.Serial,
-				"AssetType": msg.Asset.Type,
-				"Vendor":    msg.Asset.Vendor, // At this point the vendor may or may not be known.
-				"Location":  msg.Asset.Location,
-				"Error":     err,
+				"component":    component,
+				"AssetType":    msg.Asset.Type,
+				"Error":        err,
+				"HardwareType": msg.Asset.HardwareType,
+				"ID":           identifier,
+				"IPAddress":    msg.Asset.IPAddress,                      // When we fail to login to the BMC, this field is not set...
+				"IPAddresses":  strings.Join(msg.Asset.IPAddresses, ","), // ... and that's why we list all tried IP addresses.
+				"Location":     msg.Asset.Location,
+				"Serial":       msg.Asset.Serial,
+				"Vendor":       msg.Asset.Vendor, // At this point the vendor may or may not be known.
 			}).Warn("Execute action returned error.")
 			metrics.IncrCounter([]string{"butler", "execute_fail"}, 1)
 			return
@@ -95,8 +99,9 @@ func (b *Butler) msgHandler(msg Msg) {
 				"component":    component,
 				"Error":        err,
 				"HardwareType": msg.Asset.HardwareType,
-				"IPAddress":    msg.Asset.IPAddress, // When we fail to login to the BMC, this field is not set.
 				"ID":           identifier,
+				"IPAddress":    msg.Asset.IPAddress,                      // When we fail to login to the BMC, this field is not set...
+				"IPAddresses":  strings.Join(msg.Asset.IPAddresses, ","), // ... and that's why we list all tried IP addresses.
 				"Location":     msg.Asset.Location,
 				"Serial":       msg.Asset.Serial,
 				"Vendor":       msg.Asset.Vendor, // At this point the vendor may or may not be known.
