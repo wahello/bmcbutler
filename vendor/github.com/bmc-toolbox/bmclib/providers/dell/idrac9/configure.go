@@ -167,7 +167,7 @@ func (i *IDrac9) User(cfgUsers []*cfgresources.User) (err error) {
 			"HardwareType", i.HardwareType(),
 			"Model", i.HardwareType(),
 		)
-		return errors.New(msg)
+		return errors.New(msg + " Error: " + err.Error())
 	}
 
 	// This user is reserved for IDRAC usage, we can't delete it.

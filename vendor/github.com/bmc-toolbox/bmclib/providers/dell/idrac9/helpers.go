@@ -13,7 +13,7 @@ func (i *IDrac9) putUser(userID int, user UserInfo) (err error) {
 
 	payload, err := json.Marshal(idracPayload)
 	if err != nil {
-		msg := fmt.Sprintf("Error unmarshaling user payload: %s", err)
+		msg := fmt.Sprintf("Error unmarshalling user payload: %s", err)
 		return errors.New(msg)
 	}
 
@@ -35,7 +35,7 @@ func (i *IDrac9) putLdap(ldap Ldap) (err error) {
 
 	payload, err := json.Marshal(idracPayload)
 	if err != nil {
-		msg := fmt.Sprintf("Error unmarshaling Ldap payload: %s", err)
+		msg := fmt.Sprintf("Error unmarshalling Ldap payload: %s", err)
 		return errors.New(msg)
 	}
 

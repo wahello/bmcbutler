@@ -244,7 +244,7 @@ func (d *Dora) AssetIter() {
 	component := "retrieveInventoryAssetsDora"
 
 	defer close(d.AssetsChan)
-	//defer metrics.MeasureSince(component, time.Now())
+	// defer metrics.MeasureSince(component, time.Now())
 
 	log := d.Log
 

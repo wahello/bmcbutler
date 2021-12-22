@@ -1,7 +1,9 @@
 package idrac9
 
-type UsersInfo map[int]UserInfo
-type IdracUsers map[string]UsersInfo
+type (
+	UsersInfo  map[int]UserInfo
+	IdracUsers map[string]UsersInfo
+)
 
 // User struct declares user configuration payload.
 type UserInfo struct {
@@ -572,6 +574,7 @@ var alertConfigPayload = []byte(`{
   }`)
 
 // Timezones declares all known timezones, taken from the idrac web interface.
+// nolint: spell
 var Timezones = map[string]string{
 	"Africa/Abidjan":                   "Africa/Abidjan",
 	"Africa/Accra":                     "Africa/Accra",

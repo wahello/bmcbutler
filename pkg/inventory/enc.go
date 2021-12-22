@@ -424,7 +424,7 @@ func (e *Enc) AssetIter() {
 	go func() { <-e.StopChan; interrupt = true }()
 
 	defer close(e.AssetsChan)
-	//defer d.MetricsEmitter.MeasureSince(component, time.Now())
+	// defer d.MetricsEmitter.MeasureSince(component, time.Now())
 
 	locations := strings.Join(e.Config.Locations, ",")
 	for _, assetType := range e.FilterAssetType {

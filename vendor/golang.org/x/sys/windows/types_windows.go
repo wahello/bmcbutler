@@ -1381,7 +1381,6 @@ type DataBlob struct {
 	Size uint32
 	Data *byte
 }
-
 type (
 	CryptIntegerBlob DataBlob
 	CryptUintBlob    DataBlob

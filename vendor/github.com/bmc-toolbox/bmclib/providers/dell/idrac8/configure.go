@@ -65,13 +65,14 @@ func escapeLdapString(s string) string {
 	return r
 }
 
-func (i *IDrac8) RunSshCommand(command string, id int) (success bool) {
+func (i *IDrac8) runSshCommand(command string, id int) (success bool) {
 	output, err := i.sshClient.Run(command)
 	if err != nil {
 		// "The specified value is not allowed to be configured if the user name \nor password is blank\n"
 		//   is an acceptable error while cleaning. Don't log that.
-		if !strings.Contains(err.Error(), "is blank") {
-			msg := fmt.Sprintf("IDRAC8 User(): Unable to reset existing user (ID %d).", id)
+		errString := err.Error()
+		if !strings.Contains(errString, "is blank") {
+			msg := fmt.Sprintf("IDRAC8 User(): Unable to reset existing user (ID %d). Error: %s", id, errString)
 			i.log.V(1).Error(err, msg,
 				"step", "applyUserParams",
 				"IP", i.ip,
@@ -82,7 +83,7 @@ func (i *IDrac8) RunSshCommand(command string, id int) (success bool) {
 	}
 
 	if !strings.Contains(output, "successful") {
-		msg := fmt.Sprintf("IDRAC8 User(): Unable to reset existing user (ID %d).", id)
+		msg := fmt.Sprintf("IDRAC8 User(): Unable to reset existing user (ID %d). Output: %s", id, output)
 		// "The specified value is not allowed to be configured if the user name \nor password is blank\n"
 		//   is an acceptable error while cleaning. Don't log that.
 		if !strings.Contains(output, "is blank") {
@@ -168,27 +169,27 @@ func (i *IDrac8) User(cfgUsers []*cfgresources.User) (err error) {
 		mainCommand := fmt.Sprintf("racadm set iDRAC.Users.%d.", newID)
 
 		command := mainCommand + fmt.Sprintf("Username \"%s\"", cfgUser.Name)
-		i.RunSshCommand(command, newID)
+		i.runSshCommand(command, newID)
 
 		command = mainCommand + fmt.Sprintf("Password \"%s\"", cfgUser.Password)
-		i.RunSshCommand(command, newID)
+		i.runSshCommand(command, newID)
 
 		command = mainCommand + "Enable \"Enabled\""
-		i.RunSshCommand(command, newID)
+		i.runSshCommand(command, newID)
 
 		if cfgUser.SolEnable {
 			command = mainCommand + "SolEnable \"Enabled\""
 		} else {
 			command = mainCommand + "SolEnable \"Disabled\""
 		}
-		i.RunSshCommand(command, newID)
+		i.runSshCommand(command, newID)
 
 		if cfgUser.SNMPv3Enable {
 			command = mainCommand + "SNMPv3Enable \"Enabled\""
 		} else {
 			command = mainCommand + "SNMPv3Enable \"Disabled\""
 		}
-		i.RunSshCommand(command, newID)
+		i.runSshCommand(command, newID)
 
 		if cfgUser.Role == "admin" {
 			// The number comes from 0x1FF. We reverse-engineered that by setting the user
@@ -220,7 +221,7 @@ func (i *IDrac8) User(cfgUsers []*cfgresources.User) (err error) {
 		} else {
 			command = mainCommand + "Privilege 0" // No Access!
 		}
-		i.RunSshCommand(command, newID)
+		i.runSshCommand(command, newID)
 
 		if cfgUser.Role == "admin" {
 			command = mainCommand + "IpmiLanPrivilege 4"
@@ -231,7 +232,7 @@ func (i *IDrac8) User(cfgUsers []*cfgresources.User) (err error) {
 		} else {
 			command = mainCommand + "IpmiLanPrivilege 15" // No Access!
 		}
-		i.RunSshCommand(command, newID)
+		i.runSshCommand(command, newID)
 	}
 
 	for userID := 2; userID <= 16; userID++ {
@@ -246,26 +247,26 @@ func (i *IDrac8) User(cfgUsers []*cfgresources.User) (err error) {
 		//   "The specified value is not allowed to be configured if the user name or password is blank."
 		// That's why we give a temporary name, and then blank it at the end.
 		command := mainCommand + fmt.Sprintf("Username \"TempUser%02d\"", userID)
-		i.RunSshCommand(command, userID)
+		i.runSshCommand(command, userID)
 
 		command = mainCommand + "Enable \"Disabled\""
-		i.RunSshCommand(command, userID)
+		i.runSshCommand(command, userID)
 
 		command = mainCommand + "SolEnable \"Disabled\""
-		i.RunSshCommand(command, userID)
+		i.runSshCommand(command, userID)
 
 		command = mainCommand + "SNMPv3Enable \"Disabled\""
-		i.RunSshCommand(command, userID)
+		i.runSshCommand(command, userID)
 
 		command = mainCommand + "Privilege 0"
-		i.RunSshCommand(command, userID)
+		i.runSshCommand(command, userID)
 
 		command = mainCommand + "IpmiLanPrivilege 15"
-		i.RunSshCommand(command, userID)
+		i.runSshCommand(command, userID)
 
 		// Now, really clean the username.
 		command = mainCommand + "Username \"\""
-		i.RunSshCommand(command, userID)
+		i.runSshCommand(command, userID)
 	}
 
 	return nil

@@ -78,7 +78,7 @@ func (i *IDrac8) queryUsers() (usersInfo UsersInfo, err error) {
 
 	endpoint := "data?get=user"
 
-	statusCode, response, err := i.post(endpoint, []byte{}, "")
+	statusCode, response, err := i.get(endpoint, &map[string]string{})
 	if err != nil || statusCode != 200 {
 		if err == nil {
 			err = fmt.Errorf("Received a %d status code from the GET request to %s.", statusCode, endpoint)

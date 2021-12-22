@@ -340,7 +340,7 @@ func (p *Probe) quanta(ctx context.Context, log logr.Logger) (bmcConnection inte
 	}
 
 	defer resp.Body.Close()
-	defer io.Copy(ioutil.Discard, resp.Body)
+	defer io.Copy(ioutil.Discard, resp.Body) // nolint
 
 	payload, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

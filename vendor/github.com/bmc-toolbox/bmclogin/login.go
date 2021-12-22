@@ -74,15 +74,19 @@ func (p *Params) Login() (connection interface{}, loginInfo LoginInfo, err error
 	}
 
 	defer close(p.doneChan)
-
+	// for credential map in slice
 	for _, credentials := range p.Credentials {
+		// for each credential k, v
 		for user, pass := range credentials {
+			// for each IpAddress
 			for _, ip := range p.IpAddresses {
 				if ip == "" {
 					continue
 				}
 
+				// for each retry attempt
 				for t := 0; t <= p.Retries; t++ {
+
 					if interrupt {
 						return connection, loginInfo, errInterrupted
 					}
@@ -101,12 +105,14 @@ func (p *Params) Login() (connection interface{}, loginInfo LoginInfo, err error
 						return connection, loginInfo, err
 					}
 
-					// If the IP is not active, break out of this loop to try credentials on the next IP.
+					// if the IP is not active, break out of this loop
+					// to try credentials on the next IP.
 					if ipInactive {
-						// If we're able to login to an asset that has a single IP address:
+
+						// if we're able to login to asset that has a single IP address,
 						if len(p.IpAddresses) == 1 {
 							loginInfo.WorkingCredentials = map[string]string{user: pass}
-							return connection, loginInfo, nil
+							return connection, loginInfo, err
 						}
 						break
 					}
@@ -119,7 +125,7 @@ func (p *Params) Login() (connection interface{}, loginInfo LoginInfo, err error
 
 						loginInfo.ActiveIpAddress = ip
 						loginInfo.WorkingCredentials = map[string]string{user: pass}
-						return connection, loginInfo, nil
+						return connection, loginInfo, err
 					}
 
 					loginInfo.FailedCredentials = append(loginInfo.FailedCredentials, map[string]string{user: pass})
@@ -135,7 +141,9 @@ func (p *Params) Login() (connection interface{}, loginInfo LoginInfo, err error
 	return connection, loginInfo, errors.New("All attempts to login failed.")
 }
 
+// attemptLogin tries to scanAndConnect
 func (p *Params) attemptLogin(ip string, user string, pass string) (connection interface{}, ipInactive bool, err error) {
+	// Scan BMC type and connect
 	connection, err = discover.ScanAndConnect(ip, user, pass)
 	if err != nil {
 		return connection, ipInactive, errors.New("ScanAndConnect attempt unsuccessful.")
@@ -155,6 +163,7 @@ func (p *Params) attemptLogin(ip string, user string, pass string) (connection i
 				fmt.Sprintf("BMC login attempt failed, account: %s", user))
 		}
 
+		// successful login.
 		return connection, ipInactive, nil
 	case devices.Cmc:
 		chassis := connection.(devices.Cmc)
@@ -164,14 +173,19 @@ func (p *Params) attemptLogin(ip string, user string, pass string) (connection i
 				fmt.Sprintf("Chassis login attempt failed, account: %s", user))
 		}
 
-		// A chassis has one or more controllers.
+		// A chassis has one or more controllers
 		// We return true if this controller is active.
 		if !chassis.IsActive() {
 			ipInactive = true
+			return connection, ipInactive, nil
 		}
 
 		return connection, ipInactive, nil
 	default:
 		return connection, ipInactive, errUnrecognizedDevice
 	}
+
+	// we won't ever end up here
+	// return connection, ipInactive, errors.New(
+	//	fmt.Sprintf("Unable to login"))
 }

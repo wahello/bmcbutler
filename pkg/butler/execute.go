@@ -77,7 +77,7 @@ func (b *Butler) executeCommand(command string, asset *asset.Asset) (err error) 
 		bmc.Close(context.TODO())
 	case devices.Cmc:
 		chassis := client.(devices.Cmc)
-		//b.executeCommandChassis(chassis, command)
+		// b.executeCommandChassis(chassis, command)
 		log.WithFields(logrus.Fields{
 			"component": component,
 		}).Info("Command executed.")
