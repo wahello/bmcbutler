@@ -59,7 +59,6 @@ func NewCmcSetup(
 
 // Apply applies one time setup configuration.
 func (b *CmcSetup) Apply() { //nolint: gocyclo
-
 	//defer b.metricsEmitter.MeasureRuntime(
 	//	[]string{"butler", "setupChassis_runtime"},
 	//	time.Now(),
@@ -98,7 +97,6 @@ func (b *CmcSetup) Apply() { //nolint: gocyclo
 	}).Trace("Configuration resources to be applied.")
 
 	for _, resource := range resources {
-
 		var err error
 
 		// check if an interrupt was received.
@@ -186,7 +184,6 @@ func (b *CmcSetup) Apply() { //nolint: gocyclo
 			"Serial":    b.serial,
 			"IPAddress": b.ip,
 		}).Trace("Resource configuration applied.")
-
 	}
 
 	// If chassis setup is done successfully, invoke post action.

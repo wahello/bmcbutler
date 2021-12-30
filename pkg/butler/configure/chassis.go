@@ -80,7 +80,6 @@ func (b *Cmc) Apply() { //nolint: gocyclo
 	}).Trace("Configuration resources to be applied.")
 
 	for _, resource := range resources {
-
 		var err error
 
 		// check if an interrupt was received.
@@ -162,7 +161,6 @@ func (b *Cmc) Apply() { //nolint: gocyclo
 			"Serial":       b.serial,
 			"IPAddress":    b.ip,
 		}).Trace("Resource configuration applied.")
-
 	}
 
 	if len(failed) > 0 {
