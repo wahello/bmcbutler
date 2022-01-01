@@ -83,7 +83,7 @@ func (b *Cmc) Apply() { //nolint: gocyclo
 		var err error
 
 		// check if an interrupt was received.
-		if interrupt == true {
+		if interrupt {
 			b.logger.WithFields(logrus.Fields{
 				"Vendor":       b.vendor,
 				"HardwareType": b.hardwareType,
