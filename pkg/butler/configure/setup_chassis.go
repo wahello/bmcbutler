@@ -100,7 +100,7 @@ func (b *CmcSetup) Apply() { //nolint: gocyclo
 		var err error
 
 		// check if an interrupt was received.
-		if interrupt == true {
+		if interrupt {
 			b.log.WithFields(logrus.Fields{
 				"Vendor":    b.vendor,
 				"Model":     b.model,
@@ -217,7 +217,7 @@ func (b *CmcSetup) Post() {
 // and powers it back on.
 func (b *CmcSetup) ensurePoweredUp() (err error) {
 	status, _ := b.chassis.IsOn()
-	if status == false {
+	if !status {
 		_, err := b.chassis.PowerOn()
 		if err != nil {
 			return err
@@ -644,7 +644,7 @@ func (b *CmcSetup) setBladesPower() (err error) {
 		bladeIsPoweredOn, _ := chassis.IsOnBlade(blade.BladePosition)
 
 		if bladeIsPoweredOn != powerEnable {
-			if powerEnable == true {
+			if powerEnable {
 				_, err = chassis.PowerOnBlade(blade.BladePosition)
 				if err != nil {
 					msg := "Unable power up blade."
@@ -672,7 +672,7 @@ func (b *CmcSetup) setBladesPower() (err error) {
 				}).Debug("Set blade power state on.")
 			}
 
-			if powerEnable == false {
+			if !powerEnable {
 				_, err = chassis.PowerOffBlade(blade.BladePosition)
 				if err != nil {
 					msg := "Unable power down blade."
